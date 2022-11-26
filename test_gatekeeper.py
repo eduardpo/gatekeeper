@@ -16,7 +16,7 @@ def init_gatekeeper(request):
 class TestGatekeeper:
 
     def setup_method(self):
-        DB(connect=True, database='public_api', user='root', password='123123', host='localhost').drop()
+        DB(connect=True, database='gatekeeper_api', user='root', password='123123', host='localhost').drop()
 
     def test_multi_gate_op_positive(self):
         assert ('no' in multi_gate_op(self.l_plates))
