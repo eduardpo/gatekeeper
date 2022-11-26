@@ -8,8 +8,8 @@
     
     cd gatekeeper
 
-    pip install -r requirements.txt
-
+    pip install -r requiremen
+ 
 2. **Installing MySQL server, on Ubuntu:**
 
     *Installing:*
@@ -27,3 +27,12 @@
     mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123123';
   
     mysql> exit
+ 
+3. **Running:**
+
+    python gatekeeper.py --m    # for multiple gates, process all cars simultaneously
+
+    python gatekeeper.py        # single gate, car by car
+    
+    pytest test gatekeeper.py   # could be run only once per 10 minuts due to OCR API limitation 
+    
