@@ -133,6 +133,9 @@ class DB:
 
     def drop(self):
         connection = self.connect()
+        if not connection:
+            print("Mysql not connected")
+            return False
         cur = connection.cursor()
         print("Dropping database {}".format(DB_NAME))
         cur.execute("DROP DATABASE {}".format(DB_NAME))
