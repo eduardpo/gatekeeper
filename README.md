@@ -8,7 +8,7 @@
     
     cd gatekeeper
 
-    pip install -r requiremen
+    pip install -r requirements
  
 2. **Installing MySQL server, on Ubuntu:**
 
@@ -34,5 +34,5 @@
 
     python gatekeeper.py        # single gate, car by car
     
-    pytest test gatekeeper.py   # could be run only once per 10 minuts due to OCR API limitation 
+    pytest test_gatekeeper.py   # could be run only once per 10 minuts due to OCR API limitation 
     
