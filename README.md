@@ -8,7 +8,7 @@
     
     cd gatekeeper
 
-    pip install -r requirements
+    pip install -r requirements.txt
  
 2. **Installing MySQL server, on Ubuntu:**
 
