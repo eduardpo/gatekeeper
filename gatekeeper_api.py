@@ -25,6 +25,7 @@ import aiohttp
 import logging
 from database import DB
 from datetime import datetime
+from access_list import *
 
 # create and configure logger
 logging.basicConfig(filename="gatekeeper_api.log",
@@ -37,31 +38,31 @@ logger = logging.getLogger()
 # setting the threshold of logger to DEBUG
 logger.setLevel(logging.DEBUG)
 
-OCR_FREE_API = 'https://api.ocr.space/parse/image'
+OCR_FREE_API_URL = 'https://api.ocr.space/parse/image'
 
 
 class LicensePlate:
-    # two last digits access rules:
-    allowed = (25, 26)
-    not_allowed = (85, 86, 87, 88, 89, 00)
 
     def __init__(self):
         self.number = None
         self.permission = None
         self.fuel = None
         # create or use existing db
-        self.db = DB(connect=True, drop=True, database='gatekeeper_api', user='root', password='123123', host='localhost')
+        self.db = DB(connect=True, drop=True, database='gatekeeper_api', user='root', password='123123',
+                     host='localhost')
 
-    async def read_number(self, f_name, overlay='False', api_key='helloworld', language='eng'):
-        logger.info("posting image file {} to: {}".format(f_name, OCR_FREE_API))
+    async def read_number(self, f_name, overlay='False', api_key='helloworld', language='eng',
+                          detect_orientation='True'):
+        logger.info("posting image file {} to: {}".format(f_name, OCR_FREE_API_URL))
         try:
             with open(f_name, 'rb') as f:
                 async with aiohttp.ClientSession() as session:
-                    async with session.post(OCR_FREE_API,
-                                             data={'file': f, 'isOverlayRequired': overlay,
-                                                   'apikey': api_key,
-                                                   'language': language,
-                                                   }) as response:
+                    async with session.post(OCR_FREE_API_URL,
+                                            data={'file': f, 'isOverlayRequired': overlay,
+                                                  'apikey': api_key,
+                                                  'language': language,
+                                                  'detectOrientation': detect_orientation,
+                                                  }) as response:
                         data = await response.text()
         except FileNotFoundError or requests.exceptions.RequestException as e:
             logger.error(e)
@@ -91,9 +92,10 @@ class LicensePlate:
         logger.info("the random fuel was set to: {}".format(self.fuel))
 
     def verify_permission(self):
-        if len(self.number) == 7 and self.number[-1] in (0, 5) or \
-                self.number[-2:] not in self.allowed \
-                or self.number[-2:] in self.not_allowed:
+        logger.info("verify permission for car: {}".format(self.number[-2:]))
+        #if len(self.number) == 7 and self.number[-1] in (0, 5) or \
+        if int(self.number[-2:]) not in ALLOWED \
+                or int(self.number[-2:]) in NOT_ALLOWED:
             self.permission = 'no'
         else:
             self.permission = 'yes'

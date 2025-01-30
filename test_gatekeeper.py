@@ -6,7 +6,7 @@ from gatekeeper import *
 @pytest.fixture(scope='class')
 def init_gatekeeper(request):
     # get and store all cars' plates
-    request.cls.l_plates = [files for subdir, dirs, files in os.walk(NOT_ALLOWED_CARS)][0]
+    request.cls.l_plates = [files for subdir, dirs, files in os.walk(INCOMING_CARS)][0]
     yield
     request.cls.l_plates = None
 

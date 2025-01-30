@@ -19,7 +19,7 @@ import argparse
 from gatekeeper_api import LicensePlate
 from database import DB
 
-NOT_ALLOWED_CARS = 'not_allowed'
+INCOMING_CARS = 'incoming_cars'
 
 
 async def process_car(f_name):
@@ -33,7 +33,7 @@ async def process_car(f_name):
 
 async def multiple_gates(plates):
     result = await asyncio.gather(*[process_car(
-        os.path.join(NOT_ALLOWED_CARS, plate)) for plate in plates])
+        os.path.join(INCOMING_CARS, plate)) for plate in plates])
     return result
 
 
@@ -46,7 +46,7 @@ def multi_gate_op(plates):
 def single_gate_op(plates):
     result = []
     for plate in plates:
-        result.append(asyncio.run(process_car(os.path.join(NOT_ALLOWED_CARS, plate))))
+        result.append(asyncio.run(process_car(os.path.join(INCOMING_CARS, plate))))
     return result
 
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     # delete database
     DB(connect=True, database='gatekeeper_api', user='root', password='123123', host='localhost').drop()
     # get and store all cars' plates
-    l_plates = [files for subdir, dirs, files in os.walk(NOT_ALLOWED_CARS)][0]
+    l_plates = [files for subdir, dirs, files in os.walk(INCOMING_CARS)][0]
     # run multiple or single gate operation
     if args['m']:
         multi_gate_op(l_plates)
